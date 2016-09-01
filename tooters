@@ -1,0 +1,12 @@
+using System;
+
+namespace toters
+{
+	class MainClass
+	{
+		public static void Main (string[] args)
+		{
+			Console.WriteLine ("Hello World!");
+		}
+	}
+}
