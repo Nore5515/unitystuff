@@ -1,0 +1,81 @@
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class PlayerMovementScript : MonoBehaviour {
+
+	public float movementSpeed;
+
+	public GameObject playerHead;
+
+	private float upSpeed;
+
+
+	public float jumpSpeed = 8.0F;
+	public float gravity = 20.0F;
+
+	public float distToGround;
+
+	// Use this for initialization
+	void Start () {
+		upSpeed = 0.0f;
+
+		distToGround = this.GetComponent<Collider>().bounds.extents.y;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+
+		Transform rb = playerHead.GetComponent<Transform> ();
+
+
+		if (Input.GetKey (KeyCode.W) && !Input.GetKey (KeyCode.S)) {
+			this.transform.Translate(rb.transform.forward * movementSpeed);
+			//zSpeed = movementSpeed;
+		} else if (Input.GetKey (KeyCode.S) && !Input.GetKey (KeyCode.W)) {
+			this.transform.Translate(-rb.transform.forward * movementSpeed);
+			//zSpeed = -movementSpeed;
+		} else {
+			//zSpeed = 0.0f;
+		}
+
+		if (Input.GetKey (KeyCode.A) && !Input.GetKey (KeyCode.D)) {
+			this.transform.Translate(-rb.transform.right * movementSpeed);
+			//xSpeed = movementSpeed;
+		} else if (Input.GetKey (KeyCode.D) && !Input.GetKey (KeyCode.A)) {
+			this.transform.Translate(rb.transform.right * movementSpeed);
+			//xSpeed = -movementSpeed;
+		} else {
+			//xSpeed = 0.0f;
+		}
+
+		//Vector3 movement = transform.InverseTransformVector (new Vector3 (xSpeed, 0.0f, zSpeed));
+		//rb.transform.Translate (movement);
+
+
+
+		//JUMPING
+
+		Rigidbody cc = this.GetComponent<Rigidbody> ();
+		
+		if (Input.GetButton ("Jump") && IsGrounded () == true) {
+			upSpeed = 10.0f;
+		} else if (Input.GetButton ("Jump") && IsGrounded () == false) {
+			upSpeed = 0.1f;
+		}
+
+		if (IsGrounded () == false) {
+			upSpeed = upSpeed - 0.015f;
+		}
+		if (IsGrounded () == true) {
+			upSpeed = 0;
+		}
+
+		this.transform.Translate (new Vector3 (0.0f, upSpeed, 0.0f));
+		
+	}
+	bool IsGrounded(){
+		return Physics.Raycast(new Ray(this.transform.position, -Vector3.up), distToGround);
+		//return Physics.Raycast(-Vector3.up, distToGround + 0.1);
+	}
+}
